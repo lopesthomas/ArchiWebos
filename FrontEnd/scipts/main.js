@@ -21,6 +21,39 @@ function tableau(Projet){donneesProjets = Projet; console.log(donneesProjets)};
 
 
 function genererProjet(donneesProjets, x){
+
+    if(x > 0) {
+        console.log("valeur de x ", x);
+        document.querySelector(".gallery").innerHTML = "";
+        for (let i = 0; i < donneesProjets.length; i++) {
+            if(x == donneesProjets[i].category.id){
+    
+        
+            const figure = donneesProjets[i];
+            // Récupération de l'élément du DOM qui accueillera les projets
+            const sectionFiches = document.querySelector(".gallery");
+            // Création d’une balise dédiée à un projet
+            const pieceElement = document.createElement("figure");
+            // Création des balises 
+            const imageElement = document.createElement("img");
+            imageElement.src = figure.imageUrl;
+            const nomElement = document.createElement("figcaption");
+            nomElement.innerText = figure.title;
+          
+            const categorieElement = document.createElement("p");
+            categorieElement.innerText = figure.category.id ?? "(aucune catégorie)";
+            
+            // On rattache la balise figure a la class gallery
+            sectionFiches.appendChild(pieceElement);
+            pieceElement.appendChild(imageElement);
+            pieceElement.appendChild(nomElement);
+            pieceElement.appendChild(categorieElement);
+        
+            }
+          }
+
+    } else {
+
     document.querySelector(".gallery").innerHTML = "";
       for (let i = 0; i < donneesProjets.length; i++) {
     
@@ -45,9 +78,9 @@ function genererProjet(donneesProjets, x){
         pieceElement.appendChild(nomElement);
         pieceElement.appendChild(categorieElement);
     
-        console.log("valeur de x ",x);
+        
       }
-       
+     }
     };
 
     const setDonnees = new Set();    
@@ -82,22 +115,27 @@ function genererProjet(donneesProjets, x){
 
         const setIter = setDonnees[Symbol.iterator]();
         let id = 0;
+
+        function generateClickFunction(buttonNumber) {
+            return function() {
+                genererProjet(donneesProjets, buttonNumber)
+              console.log("Vous avez cliqué sur le bouton " + buttonNumber);
+            };
+          }
+
       //  for (let j = 0; j < set1.size; j++) 
         setDonnees.forEach(function(value) {
           let recup = setIter.next().value;
-          let tb = [];
+          
           id = id + 1;  
-          tb.push(id);
-          console.log("id ", id, tb); 
-          tb[id] = document.createElement("button");
-          tb[id].innerHTML = recup;
-          cibleHTML.appendChild(tb[id]);
+          button = document.createElement("button");
+          button.innerHTML = recup;
+          button.className = id; 
+          button.addEventListener("click", generateClickFunction(id));
 
-          tb[id].addEventListener ("click", function() {
-             alert("alert");
-             genererProjet(donneesProjets, id);
-             console.log("button click");
-           });
+          cibleHTML.appendChild(button);
+
+          
 
           console.log(" valeur ", );
       
