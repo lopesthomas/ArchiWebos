@@ -26,18 +26,16 @@
 <main>
     <section class="login">
         <h2>Login</h2>
-        <form action="./scipts/login.js" method="post">
+        <form  id="login-form">
             
                 <label for="email">E-mail</label><br>
-                <input type="email" name="email" id="email " required>
+                <input type="email" name="email" id="email" required>
             
             
                 <label for="mdp">Mot de passse</label><br>
                 <input type="password" name="mdp" id="mdp" required>
             
-                <input type="button" value="login" id="submit" onclick="validation">
-                <input type="submit" value="Se connecter" onclick="validation()">
-            
+                <input type="submit" value="Se connecter" >
         </form>
         <a href="#">Mot de passe oublié</a>
     </section>
