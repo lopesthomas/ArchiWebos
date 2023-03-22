@@ -9,16 +9,16 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
-	<script type="text/javascript" src="./scipts/main.js"></script>
+	<script type="text/javascript" src="./scipts/login.js"></script>
 </head>
 <body>
 <header>
 	<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
 	<nav>
 		<ul>
-			<li>projets</li>
-			<li>contact</li>
-			<li>login</li>
+			<li><a href="./index.html#projets">projets</a></li>
+			<li><a href="./index.html#contact">contact</a></li>
+			<li><a href="./login.html">login</a></li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
@@ -26,7 +26,7 @@
 <main>
     <section class="login">
         <h2>Login</h2>
-        <form action="" method="post">
+        <form action="./scipts/login.js" method="post">
             
                 <label for="email">E-mail</label><br>
                 <input type="email" name="email" id="email " required>
@@ -35,8 +35,8 @@
                 <label for="mdp">Mot de passse</label><br>
                 <input type="password" name="mdp" id="mdp" required>
             
-            
-                <input type="submit" value="Se connecter">
+                <input type="button" value="login" id="submit" onclick="validation">
+                <input type="submit" value="Se connecter" onclick="validation()">
             
         </form>
         <a href="#">Mot de passe oublié</a>
