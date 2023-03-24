@@ -53,6 +53,22 @@ body {
 	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
+
+.sticky-bar {
+	display: flex;
+	justify-content: center;
+	background-color: black;
+	margin: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+
+button {
+	height: 59px;
+}
+
 header {
 	display: flex;
 	justify-content: space-between;
