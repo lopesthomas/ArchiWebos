@@ -1,3 +1,68 @@
+
+function checkLogin(donneesProjets) {
+    if (localStorage.getItem('token')) {
+        // Si l'utilisateur est connecté
+        // document.querySelector(".sticky-bar").innerHTML = "";
+        document.body.style.marginTop = "90px";
+        //Cible la balise pour inserer les elements
+        const cibleBar = document.querySelector(".stickybar");      
+
+        let a = document.createElement("a");
+        let link = document.createTextNode("Mode édition")
+        a.title = "Mode édition";
+        a.href = "#";
+        a.innerHTML = '<i class="fa-regular fa-pen-to-square" style="color: #ffffff;"></i> Mode édition';
+        a.style.textDecorationLine = "none";
+        cibleBar.appendChild(a);
+
+        //Creation du button
+        let buttonn = document.createElement("button");
+        buttonn.innerHTML = "publier les changements";
+        //Placer en element "Child" a la cible
+        cibleBar.appendChild(buttonn);
+        //Evenement au Click du button
+        buttonn.addEventListener ("click", function() {
+            // alert("alert");
+            console.log("button click");
+        });
+
+        let login = document.getElementById("login");
+        login.innerHTML = "logout";
+        login.addEventListener("click", function() {
+            localStorage.removeItem('token');
+            document.location.href="./index.html";
+        });
+
+        cibleIntro = document.querySelector("#intro-figure")
+        let aIntro = document.createElement("a");
+        let linkIntro = document.createTextNode("Mode édition")
+        aIntro.title = "Mode édition";
+        aIntro.innerHTML = '<i class="fa-regular fa-pen-to-square" style="color: #000000;"></i> modifier';
+        cibleIntro.appendChild(aIntro);
+
+        cibleProjet = document.querySelector(".h2-box");
+        let aProjet = document.createElement("a");
+        let linkProjet = document.createTextNode("Mode édition")
+        aProjet.title = "Mode édition";
+        aProjet.innerHTML = '<i class="fa-regular fa-pen-to-square" style="color: #000000;"></i> modifier';
+        cibleProjet.appendChild(aProjet);
+
+    } else {
+
+        // Si l'utilisateur n'est pas connecté
+        login.innerHTML = "login";
+        login.addEventListener("click", function() {
+            localStorage.removeItem('token');
+            document.location.href="./login.html";
+        });
+        document.getElementById("stickbar").style.display = "none";
+        console.log("pas connecte");
+        genererButtons(donneesProjets);
+    }
+}
+
+
+
 //Recuperation des donnees des Projets serveur
 function init(){
     console.log("Initialisation");
@@ -11,7 +76,8 @@ init();
 function sendData(donneesProjets) {
 
     genererProjet(donneesProjets);
-    genererButtons(donneesProjets);
+    checkLogin(donneesProjets);
+    
 }
     
 function genererProjet(donneesProjets, x){
@@ -119,3 +185,4 @@ function genererButtons(donneesProjets){
         cibleHTML.appendChild(button);
     });
 }
+
