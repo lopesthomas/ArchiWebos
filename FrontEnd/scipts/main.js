@@ -101,6 +101,7 @@ function genererProjet(donneesProjets, x){
                 imageElement.src = figure.imageUrl;
                 const nomElement = document.createElement("figcaption");
                 nomElement.innerText = figure.title;
+
               
                 const categorieElement = document.createElement("p");
                 categorieElement.innerText = figure.category.id ?? "(aucune catégorie)";
@@ -210,12 +211,18 @@ function fermerModal() {
     let modal = document.querySelector(".modal");
     modal.setAttribute("aria-hidden", true);
     modal.style.display = "none";
+    let container1 = document.querySelector(".container1");
+    let container2 = document.querySelector(".container2");
+    container1.innerHTML = "";
+    container2.innerHTML = "";
 
 }
 
 function editGallery(donneesProjets) {
     let container1 = document.querySelector(".container1");
+    let container2 = document.querySelector(".container2");
     container1.innerHTML = "";
+    container2.innerHTML = "";
     titleModal = document.getElementById("titlemodal");
     titleModal.innerHTML = "Galerie photo";
     container1.style.display = "grid"
@@ -234,11 +241,54 @@ function editGallery(donneesProjets) {
         imageElement.src = figure.imageUrl;
         imageElement.style.width = "inherit";
 
+        const buttonSup = document.createElement("button");
+        buttonSup.innerHTML = '<i class="fa-solid fa-trash-can fa-2xs" style="color: #ffffff;"></i>'
+        buttonSup.style.position = "relative";
+        buttonSup.style.top = "-85%";
+        buttonSup.style.left = "25%";
+        buttonSup.style.width = "17px";
+        buttonSup.style.height = "17px";
+        buttonSup.style.padding = "0";
+        buttonSup.style.backgroundColor = "#000000";
+        buttonSup.style.border = "transparent";
+        buttonSup.style.borderRadius = "2px";
+
+        const editText = document.createElement("a");
+        editText.href = "#";
+        editText.innerHTML = "éditer";
+        editText.style.textDecorationLine = "none";
+
         
         // On rattache la balise figure a la class container1
         container1.appendChild(pieceElement);
         pieceElement.appendChild(imageElement);
+        
+        pieceElement.appendChild(editText);
+        pieceElement.appendChild(buttonSup);
     }
+    container2.style.marginTop = "38px";
+    container2.style.marginBottom = "38px";
+    const buttonAjouter = document.createElement("button")
+    buttonAjouter.innerHTML = "Ajouter une photo";
+    buttonAjouter.style.backgroundColor = "#1D6154";
+    buttonAjouter.style.border = "transparent";
+    buttonAjouter.style.borderRadius = "60px";
+    buttonAjouter.style.fontFamily = "Syne";
+    buttonAjouter.style.color = "white";
+    buttonAjouter.style.height = "36px";
+    buttonAjouter.style.padding = "0px 49px";
+
+    const toutSup = document.createElement("a");
+    toutSup.innerHTML = "Supprimer la galerie";
+    toutSup.style.textDecorationLine = "none";
+    toutSup.style.color = "#D65353";
+    toutSup.style.marginTop = "23px";
+    toutSup.style.fontFamily = "Syne";
+
+
+    container2.appendChild(buttonAjouter);
+    container2.appendChild(toutSup);
+
     ouvrirModal();
 
 }
