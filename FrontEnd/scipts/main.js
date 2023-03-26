@@ -14,6 +14,9 @@ function checkLogin(donneesProjets) {
         a.innerHTML = '<i class="fa-regular fa-pen-to-square" style="color: #ffffff;"></i> Mode édition';
         a.style.textDecorationLine = "none";
         cibleBar.appendChild(a);
+        a.addEventListener ("click", function() {
+            editGallery(donneesProjets);
+        });
 
         //Creation du button
         let buttonn = document.createElement("button");
@@ -186,3 +189,56 @@ function genererButtons(donneesProjets){
     });
 }
 
+const ouvrirModal = function (e) {
+    console.log("open modal");
+    let modal = document.querySelector(".modal");
+    modal.style.display = null;
+    modal.setAttribute("aria-hidden", false);
+    let buttonCloseModal = document.querySelector(".closemodalbutton");
+    buttonCloseModal.addEventListener("click", function(){
+        fermerModal();
+    })
+    modal.addEventListener("click", function(event){
+        if (!event.target.closest(".modalWindow")) {
+            fermerModal();
+        }
+    });
+
+}
+
+function fermerModal() {
+    let modal = document.querySelector(".modal");
+    modal.setAttribute("aria-hidden", true);
+    modal.style.display = "none";
+
+}
+
+function editGallery(donneesProjets) {
+    let container1 = document.querySelector(".container1");
+    container1.innerHTML = "";
+    titleModal = document.getElementById("titlemodal");
+    titleModal.innerHTML = "Galerie photo";
+    container1.style.display = "grid"
+    container1.style.gridTemplateColumns = "1fr 1fr 1fr 1fr 1fr";
+    container1.style.gridColumnGap = "9px"
+    container1.style.gridRowGap = "9px"
+
+    for (let i = 0; i < donneesProjets.length; i++) {        
+            
+        const figure = donneesProjets[i];
+        // Création d’une balise dédiée à un projet
+        const pieceElement = document.createElement("figure");
+        pieceElement.style.width = "inherit";
+        // Création des balises 
+        const imageElement = document.createElement("img");
+        imageElement.src = figure.imageUrl;
+        imageElement.style.width = "inherit";
+
+        
+        // On rattache la balise figure a la class container1
+        container1.appendChild(pieceElement);
+        pieceElement.appendChild(imageElement);
+    }
+    ouvrirModal();
+
+}
