@@ -77,7 +77,8 @@ function init(){
 init();
     
 function sendData(donneesProjets) {
-
+    console.log(donneesProjets);
+    categories(donneesProjets);
     genererProjet(donneesProjets);
     checkLogin(donneesProjets);
     
@@ -141,8 +142,18 @@ function genererProjet(donneesProjets, x){
     }
 };
     
-const setDonnees = new Set();    
-    
+const setDonnees = new Set();
+const setIter = setDonnees[Symbol.iterator]();
+let id = 0;
+
+function categories(donneesProjets){
+    for (let i = 0; i < donneesProjets.length; i++) {
+        let catname = donneesProjets[i].category.name;
+        setDonnees.add(catname);
+        console.log(setDonnees);
+    };    
+}    
+
 function genererButtons(donneesProjets){
     
     //Cible la balise pour inserer les buttons
@@ -159,15 +170,15 @@ function genererButtons(donneesProjets){
         console.log("button click");
     });
                     
-    for (let i = 0; i < donneesProjets.length; i++) {
-        let catname = donneesProjets[i].category.name;
-        setDonnees.add(catname);
-        console.log(setDonnees);
-        // console.log(i);
-    };
+    // for (let i = 0; i < donneesProjets.length; i++) {
+    //     let catname = donneesProjets[i].category.name;
+    //     setDonnees.add(catname);
+    //     setDonnees = setDonnees;
+    //     console.log(setDonnees);
+    //     // console.log(i);
+    // };
 
-    const setIter = setDonnees[Symbol.iterator]();
-    let id = 0;
+    
 
     function generateClickFunction(buttonNumber) {
         return function() {
@@ -199,11 +210,16 @@ const ouvrirModal = function (e) {
     buttonCloseModal.addEventListener("click", function(){
         fermerModal();
     })
-    modal.addEventListener("click", function(event){
-        if (!event.target.closest(".modalWindow")) {
-            fermerModal();
+    // modal.addEventListener("click", function(event){
+    //     if (!event.target.closest(".modalWindow")) {
+    //         fermerModal();
+    //     }
+    // });
+    window.onclick = function(event) {
+        if (event.target == modal) {
+          fermerModal();
         }
-    });
+      }
 
 }
 
@@ -215,6 +231,13 @@ function fermerModal() {
     let container2 = document.querySelector(".container2");
     container1.innerHTML = "";
     container2.innerHTML = "";
+    if(document.querySelector(".retour")) {
+        console.log("Oui il y a la class retour")
+        document.getElementById("retour").remove();
+        
+    }
+    //titreProjet.removeEventListener("keyup");
+
 
 }
 
@@ -277,6 +300,10 @@ function editGallery(donneesProjets) {
     buttonAjouter.style.color = "white";
     buttonAjouter.style.height = "36px";
     buttonAjouter.style.padding = "0px 49px";
+    buttonAjouter.addEventListener("click", function(){
+        console.log("test");
+        ajoutProjet(donneesProjets);
+    });
 
     const toutSup = document.createElement("a");
     toutSup.innerHTML = "Supprimer la galerie";
@@ -288,7 +315,246 @@ function editGallery(donneesProjets) {
 
     container2.appendChild(buttonAjouter);
     container2.appendChild(toutSup);
-
+    if(document.querySelector(".retour")) {
+        console.log("Oui il y a la class retour")
+        document.getElementById("retour").remove();
+        
+    }
     ouvrirModal();
+}
 
+function ajoutProjet(donneesProjets) {
+    let modal = document.querySelector(".modal");
+    let container1 = document.querySelector(".container1");
+    let container2 = document.querySelector(".container2");
+    let topModal = document.querySelector(".topmodal");
+    container1.innerHTML = "";
+    container2.innerHTML = "";
+
+    const buttonRetour = document.createElement("button");
+    buttonRetour.innerHTML = '<i class="fa-solid fa-arrow-left-long fa-xl" style="color: #000000;"></i>';
+    buttonRetour.style.border = "none";
+    buttonRetour.style.background = "transparent";
+    buttonRetour.style.height = "24px";
+    buttonRetour.classList.add("retour");
+    buttonRetour.setAttribute("id","retour");
+    buttonRetour.addEventListener("click", function(){
+        editGallery(donneesProjets);
+    })
+    topModal.appendChild(buttonRetour);
+    titleModal = document.getElementById("titlemodal");
+    titleModal.innerHTML = "Ajout photo";
+
+    container1.style.gridTemplateColumns = "1fr";
+    container1.style.gridColumnGap = "0px"
+    container1.style.gridRowGap = "0px"
+
+    const divInsertImg = document.createElement("div");
+    divInsertImg.setAttribute("id", "divPhoto");
+    divInsertImg.style.height = "169px";
+    divInsertImg.style.backgroundColor = "#E8F1F6";
+    divInsertImg.style.borderRadius = "3px";
+    divInsertImg.style.display = "flex";
+    divInsertImg.style.flexDirection = "column";
+    divInsertImg.style.justifyContent = "center";
+    divInsertImg.style.alignItems = "center";
+    //divInsertImg.innerHTML = '<i class="fa-regular fa-image fa-2xl" style="color: #B9C5CC;font-size: 58px;"></i>';
+
+    const iconeImg = document.createElement("p");
+    iconeImg.innerHTML = '<i class="fa-regular fa-image fa-2xl" style="color: #B9C5CC;font-size: 58px;"></i>';
+    iconeImg.style.height = "41px"
+
+    const inputFile = document.createElement("input");
+    inputFile.setAttribute("type", "file");
+    inputFile.setAttribute("hidden", true);
+    inputFile.setAttribute("id", "input_file");
+    inputFile.setAttribute("accept", "image/png, image/jpeg");
+    inputFile.addEventListener("change", fichierImg, false);
+    //inputFile.setAttribute("onchange", "showPreview(event)");
+    
+     function fichierImg() {
+        let image = this.files;
+        if(image.length > 0){
+            let src = URL.createObjectURL(image[0]);
+            document.getElementById("divPhoto").innerHTML = "";
+            let img = document.createElement("img");
+            img.src = src;
+            img.style.height = "inherit";
+            divInsertImg.appendChild(img);
+        }
+    //     
+    //     document.getElementById("divPhoto").innerHTML = "";
+    //     let img = document.createElement("img");
+    //     img.src = image;
+    //     console.log(image);
+    //     console.log(FileReader(image));
+    //     divInsertImg.appendChild(img);
+     }
+    
+
+    const buttonAjouterPhoto = document.createElement("button")
+    
+    //buttonAjouterPhoto.setAttribute("id", "upload");
+    buttonAjouterPhoto.setAttribute("title", "&nbsp;");
+    buttonAjouterPhoto.innerHTML = "+ Ajouter photo";
+    buttonAjouterPhoto.style.backgroundColor = "#CBD6DC";
+    buttonAjouterPhoto.style.border = "transparent";
+    buttonAjouterPhoto.style.borderRadius = "50px";
+    buttonAjouterPhoto.style.fontFamily = "Work Sans";
+    buttonAjouterPhoto.style.color = "#306685";
+    buttonAjouterPhoto.style.height = "36px";
+    buttonAjouterPhoto.style.padding = "0px 30px";
+    //buttonAjouterPhoto.style.outline = "none";
+    buttonAjouterPhoto.addEventListener("click", function(){
+        document.getElementById("input_file").click();
+        console.log("test");
+        
+    });
+
+    const insertInfoText = document.createElement("p");
+    insertInfoText.innerHTML = "jpg, png : 4mo max";
+    insertInfoText.style.fontFamily = "Work Sans";
+    insertInfoText.style.fontSize = "10px"
+    insertInfoText.style.color = "#444444";
+    insertInfoText.style.height = "12px";
+    insertInfoText.style.marginTop = "7px";
+
+    let formulaire = document.createElement("form");
+    formulaire.setAttribute("id", "ajout-projet");
+    formulaire.setAttribute("name", "fileinfo")
+
+    let labelTritreProjet = document.createElement("label");
+    labelTritreProjet.setAttribute("for", "Titre");
+    labelTritreProjet.innerHTML = "Titre";
+    let titreProjet = document.createElement("input");
+    titreProjet.setAttribute("type", "text");
+    titreProjet.setAttribute("name", "Titre");
+    titreProjet.setAttribute("id", "Titre");
+    
+    titreProjet.addEventListener("change", function(){
+        if(document.getElementById("categoriesList").value !== '' & document.getElementById("Titre").value !== ''){
+            valider.style.backgroundColor = "#1D6154";
+        } else {
+            valider.style.backgroundColor = "#A7A7A7";
+        }
+    })
+
+    let labelCategorieList = document.createElement("label");
+    labelCategorieList.setAttribute("for", "categoriesList");
+    labelCategorieList.innerHTML = "Catégorie";
+    let categorieList = document.createElement("select");
+  
+    categorieList.setAttribute("name", "categories");
+    categorieList.setAttribute("id", "categoriesList");
+
+    const setCat = setDonnees[Symbol.iterator]();
+    id = 0;
+    setDonnees.forEach(function(value) {
+        let recup = setCat.next().value;
+        id = id + 1;
+        let option = document.createElement("option");
+        option.setAttribute("value", id);
+        option.innerHTML = recup;
+
+        categorieList.appendChild(option);
+    });
+
+    console.log(setDonnees);
+
+    container1.appendChild(divInsertImg);
+    divInsertImg.appendChild(iconeImg);
+    divInsertImg.appendChild(buttonAjouterPhoto);
+    divInsertImg.appendChild(insertInfoText);
+    container1.appendChild(formulaire);
+    formulaire.appendChild(labelTritreProjet);
+    formulaire.appendChild(titreProjet);
+    formulaire.appendChild(labelCategorieList);
+    formulaire.appendChild(categorieList);
+    formulaire.appendChild(inputFile);
+    
+
+    let valider = document.createElement("input");
+    valider.setAttribute("type", "submit");
+    valider.setAttribute("id", "submit");
+    valider.innerHTML = "Valider";
+    valider.style.backgroundColor = "#A7A7A7";
+    valider.addEventListener("click", function(){
+        if(document.getElementById("categoriesList").value !== '' & document.getElementById("Titre").value !== ''){
+            console.log("check reussi");
+            console.log(document.getElementById("Titre").value);
+            console.log(document.getElementById("categoriesList").value);
+            console.log(document.getElementById("input_file").value);
+
+            var form = document.forms.namedItem("fileinfo");
+
+            oData = new FormData();
+            //oData.append("id", donneesProjets.length + 1);
+            oData.append("title", document.getElementById("Titre").value);
+            
+            oData.append("category", document.getElementById("categoriesList").value);
+            oData.append("image", document.getElementById("input_file").value);
+
+            token = localStorage.getItem("token");
+            console.log("token ",token);
+            //oData.append("userid", "1");
+
+            for (const value of oData.values()) {
+                console.log("valeurs",value);
+              }
+
+              
+
+              const monHeader = new Headers();
+              monHeader.append('userId', '1');
+              monHeader.append("Authorization", {"userId": 1, "token": token});
+             fetch('http://localhost:5678/api/works', {
+
+             method: 'POST',
+             headers: {Authentication: 'Bearer {eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY3OTk0MjA2MSwiZXhwIjoxNjgwMDI4NDYxfQ.chzBDn0gPxHMSJ0XGgOqqL9p9NA6g5p9K6i3gahtgG8}'},
+             body: oData
+         })
+        // .then(response => response.json())
+        // .then(data => {
+        //     // Traitement de la réponse de l'API
+        //     if(data.userId == 1) {
+
+        //         const token = data.token;
+        //         localStorage.setItem("token", token);
+        //         console.log("user connect");
+        //         console.log(localStorage.getItem('token'));
+        //         document.location.href="./index.html";
+        //     } else {
+        //         console.log("user unknow")
+        //         alert("Erreur dans l’identifiant ou le mot de passe");
+        //     }
+
+        //     console.log(data);
+        //     //  alert('Connexion réussie!');
+        // })
+
+         .catch(error => {
+        //     // Gestion des erreurs de l'API
+             console.error(error);
+        //     alert('Erreur de connexion!');
+         });
+
+        }else{
+            console.log("check echoué");
+            console.log(document.getElementById("Titre").value);
+            console.log(document.getElementById("categoriesList").value);
+            console.log(document.getElementById("input_file").value);
+        }
+    })
+
+    container2.appendChild(valider);
+    
+}
+
+function showPreview(event){
+    if(event.target.files.length > 0){
+        let src = URL.createObjectURL(event.target.files[0]);
+        let preview = document.getElementById("input_file");
+        preview.src = src;
+        preview.style.display = "block";
+    }
 }
