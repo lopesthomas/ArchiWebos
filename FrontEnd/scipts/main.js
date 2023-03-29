@@ -492,7 +492,7 @@ function ajoutProjet(donneesProjets) {
             oData.append("title", document.getElementById("Titre").value);
             
             oData.append("category", document.getElementById("categoriesList").value);
-            oData.append("image", document.getElementById("input_file").value);
+            oData.append("image", document.getElementById("input_file").files[0]);
 
             token = localStorage.getItem("token");
             console.log("token ",token);
@@ -502,18 +502,15 @@ function ajoutProjet(donneesProjets) {
                 console.log("valeurs",value);
               }
 
-              
-
-              const monHeader = new Headers();
-              monHeader.append('userId', '1');
-              monHeader.append("Authorization", {"userId": 1, "token": token});
              fetch('http://localhost:5678/api/works', {
 
              method: 'POST',
-             headers: {Authentication: 'Bearer {eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY3OTk0MjA2MSwiZXhwIjoxNjgwMDI4NDYxfQ.chzBDn0gPxHMSJ0XGgOqqL9p9NA6g5p9K6i3gahtgG8}'},
+             headers: {
+                'Content-Type' : 'multipart/form-data',
+                'Authorization' : `Bearer ${token}`},
              body: oData
          })
-        // .then(response => response.json())
+        // .then(response => console.log(response));
         // .then(data => {
         //     // Traitement de la réponse de l'API
         //     if(data.userId == 1) {
@@ -535,6 +532,7 @@ function ajoutProjet(donneesProjets) {
          .catch(error => {
         //     // Gestion des erreurs de l'API
              console.error(error);
+             console.log(token);
         //     alert('Erreur de connexion!');
          });
 
