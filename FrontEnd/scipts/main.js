@@ -2,7 +2,7 @@
 function checkLogin(donneesProjets) {
     if (localStorage.getItem('token')) {
         // Si l'utilisateur est connecté
-        // document.querySelector(".sticky-bar").innerHTML = "";
+        document.querySelector(".stickybar").innerHTML = "";
         document.body.style.marginTop = "90px";
         //Cible la balise pour inserer les elements
         const cibleBar = document.querySelector(".stickybar");      
@@ -40,14 +40,24 @@ function checkLogin(donneesProjets) {
         let aIntro = document.createElement("a");
         let linkIntro = document.createTextNode("Mode édition")
         aIntro.title = "Mode édition";
+        aIntro.href = "#";
+        aIntro.style.textDecorationLine = "none";
         aIntro.innerHTML = '<i class="fa-regular fa-pen-to-square" style="color: #000000;"></i> modifier';
+        aIntro.addEventListener ("click", function() {
+            editGallery(donneesProjets);
+        });
         cibleIntro.appendChild(aIntro);
 
         cibleProjet = document.querySelector(".h2-box");
         let aProjet = document.createElement("a");
         let linkProjet = document.createTextNode("Mode édition")
         aProjet.title = "Mode édition";
+        aProjet.href = "#";
+        aProjet.style.textDecorationLine = "none";
         aProjet.innerHTML = '<i class="fa-regular fa-pen-to-square" style="color: #000000;"></i> modifier';
+        aProjet.addEventListener ("click", function() {
+            editGallery(donneesProjets);
+        });
         cibleProjet.appendChild(aProjet);
 
     } else {
@@ -104,14 +114,14 @@ function genererProjet(donneesProjets, x){
                 nomElement.innerText = figure.title;
 
               
-                const categorieElement = document.createElement("p");
-                categorieElement.innerText = figure.category.id ?? "(aucune catégorie)";
+                //const categorieElement = document.createElement("p");
+                //categorieElement.innerText = figure.category.id ?? "(aucune catégorie)";
                 
                 // On rattache la balise figure a la class gallery
                 sectionFiches.appendChild(pieceElement);
                 pieceElement.appendChild(imageElement);
                 pieceElement.appendChild(nomElement);
-                pieceElement.appendChild(categorieElement);        
+                //pieceElement.appendChild(categorieElement);        
             }
         }
     } else {
@@ -130,14 +140,14 @@ function genererProjet(donneesProjets, x){
             const nomElement = document.createElement("figcaption");
             nomElement.innerText = figure.title;
           
-            const categorieElement = document.createElement("p");
-            categorieElement.innerText = figure.category.id ?? "(aucune catégorie)";
+            //const categorieElement = document.createElement("p");
+            //categorieElement.innerText = figure.category.id ?? "(aucune catégorie)";
             
             // On rattache la balise figure a la class gallery
             sectionFiches.appendChild(pieceElement);
             pieceElement.appendChild(imageElement);
             pieceElement.appendChild(nomElement);
-            pieceElement.appendChild(categorieElement);            
+            //pieceElement.appendChild(categorieElement);            
         }
     }
 };
@@ -275,6 +285,14 @@ function editGallery(donneesProjets) {
         buttonSup.style.backgroundColor = "#000000";
         buttonSup.style.border = "transparent";
         buttonSup.style.borderRadius = "2px";
+        buttonSup.addEventListener("click", function(){
+            console.log("Delete project: ",donneesProjets[i].id)
+            fetch(`http://localhost:5678/api/works/${donneesProjets[i].id}`, {
+                method: 'delete',
+                headers: {Authorization : `Bearer ${localStorage.getItem('token')}`}
+            })
+            updateData();
+        })
 
         const editText = document.createElement("a");
         editText.href = "#";
@@ -483,7 +501,7 @@ function ajoutProjet(donneesProjets) {
             console.log("check reussi");
             console.log(document.getElementById("Titre").value);
             console.log(document.getElementById("categoriesList").value);
-            console.log(document.getElementById("input_file").value);
+            console.log(document.getElementById("input_file").files[0]);
 
             var form = document.forms.namedItem("fileinfo");
 
@@ -506,35 +524,18 @@ function ajoutProjet(donneesProjets) {
 
              method: 'POST',
              headers: {
-                'Content-Type' : 'multipart/form-data',
+                
                 'Authorization' : `Bearer ${token}`},
              body: oData
          })
-        // .then(response => console.log(response));
-        // .then(data => {
-        //     // Traitement de la réponse de l'API
-        //     if(data.userId == 1) {
-
-        //         const token = data.token;
-        //         localStorage.setItem("token", token);
-        //         console.log("user connect");
-        //         console.log(localStorage.getItem('token'));
-        //         document.location.href="./index.html";
-        //     } else {
-        //         console.log("user unknow")
-        //         alert("Erreur dans l’identifiant ou le mot de passe");
-        //     }
-
-        //     console.log(data);
-        //     //  alert('Connexion réussie!');
-        // })
-
+         .then(updateData)
          .catch(error => {
         //     // Gestion des erreurs de l'API
              console.error(error);
              console.log(token);
         //     alert('Erreur de connexion!');
          });
+         
 
         }else{
             console.log("check echoué");
@@ -548,11 +549,13 @@ function ajoutProjet(donneesProjets) {
     
 }
 
-function showPreview(event){
-    if(event.target.files.length > 0){
-        let src = URL.createObjectURL(event.target.files[0]);
-        let preview = document.getElementById("input_file");
-        preview.src = src;
-        preview.style.display = "block";
-    }
+function updateData(){
+    fetch('http://localhost:5678/api/works')
+    .then(response =>(response.json()))
+    .then(data => envoieNouvelleData(data));
+}
+
+function envoieNouvelleData(nouvellesDonnees){
+    genererProjet(nouvellesDonnees);
+    editGallery(nouvellesDonnees);
 }
