@@ -38,7 +38,8 @@ function checkLogin(donneesProjets) {
 
         cibleIntro = document.querySelector("#intro-figure")
         let aIntro = document.createElement("a");
-        let linkIntro = document.createTextNode("Mode édition")
+        let linkIntro = document.createTextNode("Mode édition");
+        aIntro.setAttribute("id", "modif1");
         aIntro.title = "Mode édition";
         aIntro.href = "#";
         aIntro.style.textDecorationLine = "none";
@@ -51,6 +52,7 @@ function checkLogin(donneesProjets) {
         cibleProjet = document.querySelector(".h2-box");
         let aProjet = document.createElement("a");
         let linkProjet = document.createTextNode("Mode édition")
+        aProjet.setAttribute("id", "modif2");
         aProjet.title = "Mode édition";
         aProjet.href = "#";
         aProjet.style.textDecorationLine = "none";
@@ -71,6 +73,7 @@ function checkLogin(donneesProjets) {
         document.getElementById("stickbar").style.display = "none";
         console.log("pas connecte");
         genererButtons(donneesProjets);
+        
     }
 }
 
@@ -171,6 +174,7 @@ function genererButtons(donneesProjets){
     //Creation du button
     var button = document.createElement("button");
     button.innerHTML = "Tous";
+    button.setAttribute("id", "buttonTous");
     //Placer en element "Child" a la cible
     cibleHTML.appendChild(button);
     //Evenement au Click du button
@@ -209,6 +213,7 @@ function genererButtons(donneesProjets){
 
         cibleHTML.appendChild(button);
     });
+    document.getElementById("buttonTous").click();
 }
 
 const ouvrirModal = function (e) {
@@ -348,6 +353,8 @@ function ajoutProjet(donneesProjets) {
     let topModal = document.querySelector(".topmodal");
     container1.innerHTML = "";
     container2.innerHTML = "";
+    container2.style.marginTop = "0";
+    container2.style.marginBottom = "0";
 
     const buttonRetour = document.createElement("button");
     buttonRetour.innerHTML = '<i class="fa-solid fa-arrow-left-long fa-xl" style="color: #000000;"></i>';
@@ -496,8 +503,10 @@ function ajoutProjet(donneesProjets) {
     valider.setAttribute("id", "submit");
     valider.innerHTML = "Valider";
     valider.style.backgroundColor = "#A7A7A7";
+    valider.style.height = "36px";
+    valider.style.padding = "0px 49px";
     valider.addEventListener("click", function(){
-        if(document.getElementById("categoriesList").value !== '' & document.getElementById("Titre").value !== ''){
+        if(document.getElementById("categoriesList").value !== '' & document.getElementById("Titre").value !== '' & document.getElementById("input_file").value !== ''){
             console.log("check reussi");
             console.log(document.getElementById("Titre").value);
             console.log(document.getElementById("categoriesList").value);
@@ -520,28 +529,32 @@ function ajoutProjet(donneesProjets) {
                 console.log("valeurs",value);
               }
 
-             fetch('http://localhost:5678/api/works', {
-
-             method: 'POST',
-             headers: {
-                
-                'Authorization' : `Bearer ${token}`},
-             body: oData
-         })
-         .then(updateData)
-         .catch(error => {
+            fetch('http://localhost:5678/api/works', {
+                method: 'POST',
+                headers: {'Authorization' : `Bearer ${token}`},
+                body: oData
+            })
+            .then(updateData)
+            .catch(error => {
         //     // Gestion des erreurs de l'API
-             console.error(error);
-             console.log(token);
+                console.error(error);
+                console.log(token);
         //     alert('Erreur de connexion!');
-         });
-         
+            });
 
         }else{
             console.log("check echoué");
             console.log(document.getElementById("Titre").value);
             console.log(document.getElementById("categoriesList").value);
             console.log(document.getElementById("input_file").value);
+            if(document.getElementById("input_file").value == ''){
+                alert("Il vous faut ajouter une image");
+            } else if(document.getElementById("Titre").value == ''){
+                alert("Il vous faut ajouter un titre à votre projet")
+            } else {
+                alert("Il faut que remplissiez tous les champs demandés afin d'ajouter un nouveau projet");
+  
+            }
         }
     })
 
@@ -558,4 +571,11 @@ function updateData(){
 function envoieNouvelleData(nouvellesDonnees){
     genererProjet(nouvellesDonnees);
     editGallery(nouvellesDonnees);
+    if(document.getElementById("modif1")){
+        console.log("modif est present");
+        document.getElementById("modif1").remove();
+        document.getElementById("modif2").remove();
+        checkLogin(nouvellesDonnees);
+    }
+
 }
